@@ -1,16 +1,21 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiCamera, FiSave, FiAward } from 'react-icons/fi';
+import { FiCamera, FiSave, FiAward, FiTrash2 } from 'react-icons/fi';
+import { toast } from 'react-toastify';
 import { authAPI } from '../../services/api';
 import Modal from '../common/Modal';
 
 const Profile = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, deleteAccount } = useAuth();
+  const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ name: user?.name || '', school: user?.school || '', bio: user?.bio || '', subjects: user?.subjects?.join(', ') || '' });
   const [avatarFile, setAvatarFile] = useState(null);
   const [preview, setPreview] = useState(user?.avatar || '');
   const [saving, setSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const fileRef = useRef();
 
   const handleSave = async (e) => {
@@ -41,6 +46,20 @@ const Profile = () => {
       await authAPI.becomeMentor();
       window.location.reload();
     } catch { /* ignore */ }
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      await deleteAccount();
+      toast.success('Account deleted successfully');
+      navigate('/');
+    } catch {
+      toast.error('Failed to delete account');
+    } finally {
+      setDeleting(false);
+      setShowDeleteConfirm(false);
+    }
   };
 
   return (
@@ -74,6 +93,26 @@ const Profile = () => {
           </button>
         )}
       </div>
+
+      <div className="card text-center border-red-200 dark:border-red-900">
+        <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">Danger Zone</h3>
+        <p className="text-sm text-gray-500 mt-1">Permanently delete your account and all associated data</p>
+        <button onClick={() => setShowDeleteConfirm(true)} className="btn bg-red-600 text-white hover:bg-red-700 mt-4">
+          <FiTrash2 className="inline mr-1" size={14} /> Delete Account
+        </button>
+      </div>
+
+      <Modal isOpen={showDeleteConfirm} onClose={() => !deleting && setShowDeleteConfirm(false)} title="Delete Account" size="sm">
+        <p className="text-gray-600 dark:text-gray-300 mb-4">
+          Are you sure? This will permanently delete your account, remove you from all groups, and cannot be undone.
+        </p>
+        <div className="flex gap-3">
+          <button onClick={() => setShowDeleteConfirm(false)} disabled={deleting} className="btn-secondary flex-1">Cancel</button>
+          <button onClick={handleDeleteAccount} disabled={deleting} className="btn bg-red-600 text-white hover:bg-red-700 flex-1">
+            {deleting ? 'Deleting...' : 'Delete'}
+          </button>
+        </div>
+      </Modal>
 
       <Modal isOpen={editing} onClose={() => setEditing(false)} title="Edit Profile">
         <form onSubmit={handleSave} className="space-y-4">

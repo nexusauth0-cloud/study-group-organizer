@@ -75,8 +75,17 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const deleteAccount = async () => {
+    await authAPI.deleteAccount();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setToken(null);
+    setUser(null);
+    disconnectSocket();
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, oauthLogin, logout, updateProfile, token }}>
+    <AuthContext.Provider value={{ user, loading, login, register, oauthLogin, logout, updateProfile, deleteAccount, token }}>
       {children}
     </AuthContext.Provider>
   );

@@ -32,6 +32,7 @@ export const authAPI = {
   getMe: () => api.get('/auth/me'),
   updateProfile: (data) => api.put('/auth/profile', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
   becomeMentor: () => api.put('/auth/become-mentor'),
+  deleteAccount: () => api.delete('/auth/account'),
 };
 
 export const groupAPI = {

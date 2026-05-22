@@ -18,3 +18,5 @@ services:
         value: https://study-group-organizer.onrender.com
       - key: REACT_APP_API_URL
         value: https://study-group-organizer.onrender.com/api
+      - key: REACT_APP_SOCKET_URL
+        value: https://study-group-organizer.onrender.com

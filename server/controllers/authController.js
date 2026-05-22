@@ -75,3 +75,19 @@ exports.becomeMentor = async (req, res, next) => {
     res.json({ user });
   } catch (error) { next(error); }
 };
+
+exports.deleteAccount = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const Group = require('../models/Group');
+    const Notification = require('../models/Notification');
+    const MentorRequest = require('../models/MentorRequest');
+    await Promise.all([
+      User.findByIdAndDelete(userId),
+      Group.updateMany({ members: userId }, { $pull: { members: userId, moderators: userId } }),
+      Notification.deleteMany({ user: userId }),
+      MentorRequest.deleteMany({ $or: [{ student: userId }, { mentor: userId }] }),
+    ]);
+    res.json({ message: 'Account deleted successfully' });
+  } catch (error) { next(error); }
+};
