@@ -16,3 +16,5 @@ services:
         value: 7d
       - key: CLIENT_URL
         value: https://study-group-organizer.onrender.com
+      - key: REACT_APP_API_URL
+        value: https://study-group-organizer.onrender.com/api
