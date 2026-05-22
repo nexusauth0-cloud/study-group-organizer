@@ -1,10 +1,12 @@
 const express = require('express');
 const http = require('http');
+const https = require('https');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
+const cron = require('node-cron');
 const connectDB = require('./config/db');
 const { PORT, CLIENT_URL } = require('./config/env');
 const errorHandler = require('./middleware/errorHandler');
@@ -18,6 +20,19 @@ const io = new Server(server, {
 
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+const SELF_URL = process.env.RENDER_EXTERNAL_URL || CLIENT_URL;
+if (process.env.NODE_ENV === 'production') {
+  cron.schedule('*/10 * * * *', () => {
+    const ts = new Date().toISOString();
+    https.get(`${SELF_URL}/api/health`, (res) => {
+      console.log(`[KeepAlive] ${ts} - ${res.statusCode}`);
+    }).on('error', (err) => {
+      console.error(`[KeepAlive] ${ts} - ${err.message}`);
+    });
+  });
+  console.log(`Keep-alive active: pinging ${SELF_URL} every 10min`);
+}
 
 app.use(cors({ origin: CLIENT_URL }));
 app.use(express.json({ limit: '10mb' }));

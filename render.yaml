@@ -9,6 +9,7 @@ services:
         value: production
       - key: MONGO_URI
         sync: false
+        # Set this in Render dashboard: mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/studygroup?retryWrites=true&w=majority
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRE
