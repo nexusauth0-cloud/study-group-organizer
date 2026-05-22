@@ -1,0 +1,16 @@
+{
+  "short_name": "StudyGroup",
+  "name": "Study Group Organizer",
+  "icons": [
+    { "src": "/icons/icon-192.svg", "type": "image/svg+xml", "sizes": "192x192" },
+    { "src": "/icons/icon-512.svg", "type": "image/svg+xml", "sizes": "512x512" },
+    { "src": "/icons/icon-192.svg", "type": "image/svg+xml", "sizes": "192x192", "purpose": "maskable" }
+  ],
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity"],
+  "description": "A mobile-friendly study group organizer for students and mentors"
+}

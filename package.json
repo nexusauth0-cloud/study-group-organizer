@@ -1,0 +1,18 @@
+{
+  "name": "study-group-organizer",
+  "version": "1.0.0",
+  "description": "A mobile-friendly study group organizer app for students, tutors, and mentors",
+  "scripts": {
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "seed": "cd server && node seed/seed.js",
+    "setup": "npm run install:all && npm run seed"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
